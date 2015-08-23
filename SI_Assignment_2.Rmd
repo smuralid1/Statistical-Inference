@@ -1,0 +1,73 @@
+---
+title: "Analysis of ToothGrowth data"
+author: "Muralidharan S"
+date: "23 August 2015"
+output: word_document
+---
+## Overview
+The ToothGrowth dataset is being explored. This dataset contains the length of tooth growth based on different doses of 2 supplements - Vitamin C and Orange juice.
+
+## Basic Summary of the data
+
+The data has length of tooth growth for the doses - 0.5, 1.0 and 2.0 for the supplements Orange juice and Vitamin C. From the charts in the appendix section below we get a basic overview of how the lengths of tooth growth are distributed.
+
+```{r}
+# Load the dataset toothgrowth
+library("datasets", lib.loc="C:/Program Files/R/R-3.2.0/library")
+data("ToothGrowth")
+
+
+# The following steps perform basic exploratory data analysis
+# Visual check the data once
+# ToothGrowth
+
+# Seperate the dataset into 2 datasets one each for Vitamin C and for Orange juice
+ToothGrowth_VC<-ToothGrowth[ToothGrowth$supp=='VC',]
+ToothGrowth_OJ<-ToothGrowth[ToothGrowth$supp=='OJ',]
+```
+
+
+
+## Tests and confidence interval
+
+The following section looks at t tests for different doses and compares the supplements - Orange juice and Vitamin C. The t tests give us an understanding of the means of the two supplements for different doses. Also, the t test provides with the confidence interval which is nothing but the difference in the means of the two supplements. 
+If the confidence interval is entirely positive, the first value in the sample is clearly better than the second one. If the confidence interval is entirely negative, the second value is clearly better than the first one. If the confidence interval contains 0, we cannot conclude if one is better than the other.
+
+```{r}
+# Split the dataset based on the dosage
+ToothGrowth_0.5<-ToothGrowth[ToothGrowth$dose==0.5,]
+ToothGrowth_1.0<-ToothGrowth[ToothGrowth$dose==1.0,]
+ToothGrowth_2.0<-ToothGrowth[ToothGrowth$dose==2.0,]
+
+# Perform the t test to determine the mean length of tooth growth based on
+# supplements for all the different doses.
+t.test(len~supp,paired=FALSE,var.equal=FALSE,data=ToothGrowth_0.5)
+t.test(len~supp,paired=FALSE,var.equal=FALSE,data=ToothGrowth_1.0)
+t.test(len~supp,paired=FALSE,var.equal=FALSE,data=ToothGrowth_2.0)
+```
+
+## Assumptions
+
+* The underlying distribution for both Orange juice and Vitamin C of different doses follow a normal distribution.
+* The samples are independent.
+
+
+## Conclusion
+
+When the dose is 0.5, Orange juice is definitely better than Vitamin C as the confidence interval from the test is entirely positive.
+
+When the dose is 1.0, Orange juice is definitely better than Vitamin C as the confidence interval from the test is entirely positive
+
+When the dose is 2.0, we cannot conclude which one is better as the confidence interval contains 0. Both orange juice and Vitamin C supplement appear similar as the means are close to each other.
+
+## Appendix
+```{r, echo=FALSE}
+# Plot the datasets to see how data looks like for each supplement and dosage.
+plot(ToothGrowth_VC$dose,ToothGrowth_VC$len,main='Vitamin C effect on tooth growth',
+     xlab='Dose',ylab='Length')
+
+plot(ToothGrowth_OJ$dose,ToothGrowth_OJ$len,main='Orange Juice effect on tooth 
+     growth',xlab='Dose',ylab='Length')
+```
+
+
